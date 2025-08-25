@@ -1,0 +1,12 @@
+stages:
+  - run_script
+job_run_script:
+  stage: run_script
+  script: 
+    - echo "Running the script..."
+    - cd /home/sysuser/app/krln_be/script
+    - sh -c "./your-script.sh"  # Replace with your actual script
+  tags:
+   - shell
+  only:
+    - dev  # Change this to the branch you want the job to run on

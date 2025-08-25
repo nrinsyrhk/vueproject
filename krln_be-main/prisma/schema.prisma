@@ -1,0 +1,328 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model sysdiagrams {
+  name         String @db.NVarChar(128)
+  principal_id Int
+  diagram_id   Int    @id(map: "PK__sysdiagr__C2B05B61B9818289") @default(autoincrement())
+  version      Int?
+  definition   Bytes?
+
+  @@unique([principal_id, name], map: "UK_principal_name")
+}
+
+model TblAuditTrail {
+  id_audittrail Int      @id(map: "PK_TblAuditTrail") @default(autoincrement())
+  MohonID       String?  @db.VarChar(50)
+  action        String   @db.VarChar(400)
+  actiontime    DateTime @db.DateTime
+  PenggunaID    Int
+  Application   String?  @db.VarChar(Max)
+  Reason        String?  @db.Text
+  RecordID      String?  @db.VarChar(50)
+  TableName     String?  @db.VarChar(50)
+}
+
+model TblKumpulan {
+  ID            Int          @id(map: "PK__TblKumpu__3214EC27EEA4F050") @default(autoincrement())
+  MohonID       String?      @db.VarChar(50)
+  PenggunaID    Int?
+  JenisPindaID  Int?
+  KetuaDelagasi Int?
+  NamaKapal     String?      @db.VarChar(100)
+  TblPengguna   TblPengguna? @relation(fields: [PenggunaID], references: [PenggunaID], onDelete: NoAction, onUpdate: NoAction, map: "FK__TblKumpul__Pengg__63A3C44B")
+  TblPindaan    TblPindaan?  @relation(fields: [JenisPindaID], references: [PindaanID], onDelete: NoAction, onUpdate: NoAction, map: "FK_TblKumpulan_TblPindaan")
+}
+
+model TblLampiran {
+  ID          Int       @id(map: "PK__TblLampi__3214EC275A22B9D2") @default(autoincrement())
+  MohonID     String?   @db.VarChar(50)
+  CreatedDate DateTime  @db.DateTime
+  UpdatedDate DateTime? @db.DateTime
+  NamaFail    String?   @db.VarChar(50)
+}
+
+model TblLulus {
+  LulusID    Int       @id(map: "PK_TblLulus") @default(autoincrement())
+  MohonID    String?   @db.VarChar(50)
+  TindakanID Int
+  Ulasan     String?   @db.VarChar(400)
+  PelulusID  Int
+  TkhLulus   DateTime? @db.Date
+  PindaanID  Int?
+}
+
+model TblMOF {
+  MOFID      Int       @id(map: "PK_TblMOF") @default(autoincrement())
+  MohonID    String?   @db.VarChar(50)
+  TindakanID Int?
+  SuratLulus String?   @db.VarChar(100)
+  DateLulus  DateTime? @db.Date
+}
+
+model TblPengguna {
+  PenggunaID             Int                    @id(map: "PK_TblPengguna") @default(autoincrement())
+  Nama                   String                 @db.VarChar(100)
+  NoKP                   String                 @db.VarChar(14)
+  NoPassport             String?                @db.VarChar(15)
+  Emel                   String?                @db.VarChar(100)
+  PerananID              Int?
+  PerkhidmatanID         Int
+  BahagianID             Int
+  CawanganID             Int
+  Jawatan                String?                @db.VarChar(200)
+  StatusPenggunaID       Int?
+  NoTel                  String?                @db.VarChar(15)
+  KategoriPenggunaID     Int
+  PenggunaDaftarID       Int?
+  TkhDaftar              DateTime?              @db.Date
+  PegawaiKemaskiniID     Int?
+  TkhKemaskini           DateTime?              @db.DateTime
+  PengesahID             Int?
+  TkhSah                 DateTime?              @db.DateTime
+  LogMasukAkhir          DateTime?              @db.DateTime
+  Keycloak_ID            String?                @db.VarChar(255)
+  TblKumpulan            TblKumpulan[]
+  TblPengguna            TblPengguna            @relation("TblPenggunaToTblPengguna", fields: [PenggunaID], references: [PenggunaID], onUpdate: NoAction, map: "FK_TblPengguna_TblPengguna")
+  other_TblPengguna      TblPengguna?           @relation("TblPenggunaToTblPengguna")
+  TblRefBahagian         TblRefBahagian         @relation(fields: [BahagianID], references: [BahagianID], onUpdate: NoAction, map: "FK_TblPengguna_TblRefBahagian")
+  TblRefCawangan         TblRefCawangan         @relation(fields: [CawanganID], references: [CawanganID], onUpdate: NoAction, map: "FK_TblPengguna_TblRefCawangan")
+  TblRefKategoriPengguna TblRefKategoriPengguna @relation(fields: [KategoriPenggunaID], references: [KategoriPenggunaID], onUpdate: NoAction, map: "FK_TblPengguna_TblRefKategoriPengguna")
+  TblRefPeranan          TblRefPeranan?         @relation(fields: [PerananID], references: [PerananID], onDelete: NoAction, onUpdate: NoAction, map: "FK_TblPengguna_TblRefPeranan")
+  TblRefPerkhidmatan     TblRefPerkhidmatan     @relation(fields: [PerkhidmatanID], references: [PerkhidmatanID], onUpdate: NoAction, map: "FK_TblPengguna_TblRefPerkhidmatan")
+  TblRefStatusPengguna   TblRefStatusPengguna?  @relation(fields: [StatusPenggunaID], references: [StatusPenggunaID], onDelete: NoAction, onUpdate: NoAction, map: "FK_TblPengguna_TblRefStatusPengguna")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model TblPenggunaJenisKhidmat {
+  id             BigInt?
+  PenggunaID     Int?
+  JenisKhidmatID Int?
+
+  @@ignore
+}
+
+model TblPeraku {
+  PerakuanID Int       @id(map: "PK_TblPeraku") @default(autoincrement())
+  MohonID    String?   @db.VarChar(50)
+  SokongID   Int?
+  TindakanID Int?
+  Ulasan     String?   @db.VarChar(400)
+  TkhPeraku  DateTime? @db.Date
+  PerakuID   Int?
+  PindaanID  Int?
+}
+
+model TblPermohonan {
+  id                 String             @id(map: "PK_TblPermohonan_1") @default(dbgenerated("newid()"), map: "DF_TblPermohonan_id") @db.UniqueIdentifier
+  MohonID            String?            @db.VarChar(50)
+  Nama               String             @db.VarChar(300)
+  Tujuan             String             @db.VarChar(300)
+  KategoriProgramID  Int
+  Kekerapan          Int
+  TkhMula            DateTime           @db.Date
+  TkhTamat           DateTime           @db.Date
+  Tempoh             String             @db.VarChar(50)
+  KatPesertaID       Int
+  JenisKhidmatID     Int
+  Tempat             String             @db.VarChar(50)
+  NegaraID           Int
+  Kedutaan           String?            @db.VarChar(50)
+  LulusKDN           String?            @db.VarChar(200)
+  Faedah             String             @db.Text
+  PenggunaID         Int
+  TkhHantar          DateTime?          @db.DateTime
+  StatusMohonID      Int
+  PindaanID          Int?
+  RayuanID           Int?
+  PerkhidmatanID     Int?
+  NoFail             String?            @db.NVarChar(50)
+  LampiranID         Int?
+  CreatedDate        DateTime           @db.DateTime
+  UpdatedDate        DateTime?          @db.DateTime
+  TblRefJenisKhidmat TblRefJenisKhidmat @relation(fields: [JenisKhidmatID], references: [JenisKhidmatID], onUpdate: NoAction, map: "FK_TblPermohonan_TblRefJenisKhidmat")
+  TblRefStatusMohon  TblRefStatusMohon  @relation(fields: [StatusMohonID], references: [StatusMohonID], onUpdate: NoAction, map: "FK_TblPermohonan_TblRefStatusMohon")
+}
+
+model TblPeruntukan {
+  PeruntukanID   Int       @id(map: "PK_TblPeruntukan") @default(autoincrement())
+  kewMohon       Decimal   @db.Decimal(18, 2)
+  tarikhbakiPKLN DateTime? @db.DateTime
+  bakiPKLN       Decimal   @db.Decimal(18, 2)
+  kewSah         Decimal   @db.Decimal(18, 2)
+  bakiPTJ        Decimal   @db.Decimal(18, 2)
+  tanggunganOleh String    @db.VarChar(200)
+  ulasan         String    @db.VarChar(400)
+  tajaanperinci  String?   @db.VarChar(200)
+  tajaanoleh     String?   @db.VarChar(200)
+  JenisPindaanID Int?
+  MohonID        String?   @db.VarChar(50)
+  CreatedDate    DateTime  @db.DateTime
+  UpdatedDate    DateTime? @db.DateTime
+  PengesahanRP   Int?
+}
+
+model TblPindaan {
+  PindaanID        Int              @id(map: "PK_TblPindaan") @default(autoincrement())
+  JenisPindaID     Int
+  Justifikasi      String?          @db.VarChar(500)
+  Kewdisah         Decimal?         @db.Decimal(18, 2)
+  BakiPTJ          Decimal?         @db.Decimal(18, 2)
+  Ulasan           String?          @db.VarChar(500)
+  LampiranID       Int?
+  TkhHantar        DateTime?        @db.Date
+  TblKumpulan      TblKumpulan[]
+  TblRefJenisPinda TblRefJenisPinda @relation(fields: [JenisPindaID], references: [JenisPindaID], onUpdate: NoAction, map: "FK_TblPindaan_TblRefJenisPinda")
+}
+
+model TblRayuan {
+  RayuanID    Int       @id(map: "PK_TblRayuan") @default(autoincrement())
+  Justifikasi String?   @db.VarChar(200)
+  Kepentingan String?   @db.VarChar(200)
+  Impak       String?   @db.VarChar(200)
+  KewMohon    Decimal?  @db.Decimal(18, 2)
+  KewDisah    Decimal?  @db.Decimal(18, 2)
+  BakiPTJ     Decimal?  @db.Decimal(18, 2)
+  ulasan      String?   @db.VarChar(200)
+  LampiranID  Int?
+  TkhRayuan   DateTime? @db.Date
+}
+
+model TblRefBahagian {
+  BahagianID           Int                 @id(map: "PK__TblRefBa__5577C6F70F083643")
+  PerkhidmatanID       Int?
+  BUOrgChart1          String?             @db.VarChar(15)
+  BUTitle1             String?             @db.VarChar(100)
+  BUOrgChart2          String?             @db.VarChar(20)
+  BUTitle2             String?             @db.VarChar(100)
+  TblPengguna          TblPengguna[]
+  TblRefBahagian       TblRefBahagian      @relation("TblRefBahagianToTblRefBahagian", fields: [BahagianID], references: [BahagianID], onUpdate: NoAction, map: "FK_TblRefBahagian_TblRefBahagian")
+  other_TblRefBahagian TblRefBahagian?     @relation("TblRefBahagianToTblRefBahagian")
+  TblRefPerkhidmatan   TblRefPerkhidmatan? @relation(fields: [PerkhidmatanID], references: [PerkhidmatanID], onDelete: NoAction, onUpdate: NoAction, map: "FK_TblRefBahagian_TblRefPerkhidmatan")
+}
+
+model TblRefCawangan {
+  CawanganID  Int           @id(map: "PK_TblRefCawangan") @default(autoincrement())
+  BahagianID  Int
+  Keterangan  String        @db.NChar(200)
+  TblPengguna TblPengguna[]
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model TblRefDokumen {
+  ID            BigInt?
+  Tajuk_Dokumen String?   @map("Tajuk Dokumen") @db.VarChar(1)
+  URL_Dokumen   String?   @map("URL Dokumen") @db.VarChar(1)
+  Tarikh        DateTime? @db.DateTime
+
+  @@ignore
+}
+
+model TblRefJenisKhidmat {
+  JenisKhidmatID Int             @id(map: "PK_TblRefJenisKhidmat") @default(autoincrement())
+  Keterangan     String          @db.VarChar(20)
+  TblPermohonan  TblPermohonan[]
+}
+
+model TblRefJenisPinda {
+  JenisPindaID Int          @id(map: "PK_TblRefJenisPinda") @default(autoincrement())
+  Keterangan   String       @db.VarChar(20)
+  TblPindaan   TblPindaan[]
+}
+
+model TblRefKategoriPengguna {
+  KategoriPenggunaID Int           @id(map: "PK_TblRefKategoriPengguna") @default(autoincrement())
+  Keterangan         String        @db.NChar(10)
+  TblPengguna        TblPengguna[]
+}
+
+model TblRefKategoriPeserta {
+  KatPesertaID Int    @id(map: "PK_TblRefKategoriPeserta") @default(autoincrement())
+  Keterangan   String @db.NChar(35)
+}
+
+model TblRefKategoriProgram {
+  KategoriProgramID Int    @id(map: "PK_TblRefKategoriProgram") @default(autoincrement())
+  keterangan        String @db.NChar(12)
+}
+
+model TblRefKuasaLulus {
+  KuasaLulusID Int     @id(map: "PK_TblRefKuasaLulus") @default(autoincrement())
+  Keterangan   String? @db.NChar(10)
+}
+
+model TblRefNegara {
+  NegaraID Int    @id @default(autoincrement()) @map("NegaraID")
+  Kod      String @db.NChar(3)                  @map("Kod")
+  Nama     String @db.NVarChar(255)             @map("Nama")
+}
+
+model TblRefPeranan {
+  PerananID   Int           @id(map: "PK_TblRefPeranan") @default(autoincrement())
+  Keterangan  String        @db.NChar(10)
+  TblPengguna TblPengguna[]
+}
+
+model TblRefPerkhidmatan {
+  PerkhidmatanID Int              @id(map: "PK_TblRefPerkhidmatan") @default(autoincrement())
+  Keterangan     String           @db.NChar(10)
+  TblPengguna    TblPengguna[]
+  TblRefBahagian TblRefBahagian[]
+}
+
+model TblRefStatusMohon {
+  StatusMohonID Int             @id(map: "PK_TblRefStatusMohon") @default(autoincrement())
+  Keterangan    String          @db.NChar(25)
+  TblPermohonan TblPermohonan[]
+}
+
+model TblRefStatusPengguna {
+  StatusPenggunaID Int           @id(map: "PK_TblRefStatusPengguna") @default(autoincrement())
+  Keterangan       String        @db.NChar(15)
+  TblPengguna      TblPengguna[]
+}
+
+model TblRefTindakan {
+  TindakanID Int    @id(map: "PK_TblRefTindakan") @default(autoincrement())
+  Keterangan String @db.VarChar(50)
+}
+
+model TblSemak {
+  SemakID      Int       @id(map: "PK_TblSemak") @default(autoincrement())
+  MohonID      String?   @db.VarChar(50)
+  PindaanID    Int?
+  TindakanID   Int?
+  Ulasan       String?   @db.VarChar(1200)
+  KewDiperaku  String?   @db.VarChar(50)
+  KuasaLulusID Int?
+  TkhSemak     DateTime? @db.Date
+  PenyemakID   Int
+}
+
+model TblSenaraiLampiran {
+  LampiranID Int       @id(map: "PK_TblSenaraiLampiran") @default(autoincrement())
+  Keterangan String    @db.VarChar(250)
+  MohonID    String?   @db.VarChar(50)
+  FilePath   String?   @db.VarChar(250)
+  FileType   String?   @db.VarChar(250)
+  FileSize   String?   @db.VarChar(50)
+  TkhUpload  DateTime? @db.DateTime
+}
+
+model TblSokong {
+  SokongID    Int      @id(map: "PK_TblSokong") @default(autoincrement())
+  MohonID     String?  @db.VarChar(50)
+  PindaanID   Int?
+  SemakID     Int
+  TindakanID  Int
+  Ulasan      String?  @db.VarChar(1200)
+  TkhSokong   DateTime @db.DateTime
+  PenyokongID Int
+}

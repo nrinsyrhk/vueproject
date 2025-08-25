@@ -1,0 +1,8 @@
+{
+    "realm": "mission",
+    "bearer-only": true,
+    "auth-server-url": "https://heimdall-stag.mod.gov.my",
+    "ssl-required": "external",
+    "resource": "krln",
+    "confidential-port": 0
+}

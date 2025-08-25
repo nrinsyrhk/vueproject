@@ -1,0 +1,11 @@
+{
+    "realm": "krln",
+    "auth-server-url": "https://heimdall-stag.mod.gov.my/",
+    "ssl-required": "external",
+    "resource": "krln-backend",
+    "credentials": {
+      "secret": "336pSYQaOhHKC9gFKhWxNyD9VSgSgSYY"
+    },
+    "confidential-port": 0
+  }
+  
