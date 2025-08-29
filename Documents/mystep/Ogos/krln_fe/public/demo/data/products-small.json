@@ -1,0 +1,12 @@
+{
+    "data": [
+       
+        {"id": "1000","code": "f230fh0g3","name": "Program Kerjasama Asean","description": "Product Description","image": "bamboo-watch.jpg","price": 65,"category": "Accessories","quantity": 24,"inventoryStatus": "Semakan","rating": 5},
+        {"id": "1001","code": "nvklal433","name": "Lawatan Tapak Bersejarah","description": "Product Description","image": "black-watch.jpg","price": 72,"category": "Accessories","quantity": 61,"inventoryStatus": "Kelulusan","rating": 4},
+        {"id": "1002","code": "zz21cz3c1","name": "Kursus Antarabangsa","description": "Product Description","image": "blue-band.jpg","price": 79,"category": "Fitness","quantity": 2,"inventoryStatus": "Semakan","rating": 3},
+        {"id": "1003","code": "244wgerg2","name": "Pertandingan Inovasi","description": "Product Description","image": "blue-t-shirt.jpg","price": 29,"category": "Clothing","quantity": 25,"inventoryStatus": "Perakuan","rating": 5},
+        {"id": "1004","code": "h456wer53","name": "Kursus Senjata","description": "Product Description","image": "bracelet.jpg","price": 15,"category": "Accessories","quantity": 73,"inventoryStatus": "Kelulusan","rating": 4}
+
+    ]
+}
+    

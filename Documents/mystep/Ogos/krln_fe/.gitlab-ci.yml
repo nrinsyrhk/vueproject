@@ -1,0 +1,13 @@
+stages:
+  - run_script
+job_run_script:
+  stage: run_script
+  script: 
+    - echo "Running the script..."
+    - cd /home/sysuser/app/krln_fe_vue/script
+    - sudo sh -c "./1-run.sh"  # Replace with your actual script
+    - echo "Successfully running the script..."
+  tags:
+   - shell
+  only:
+    - dev  # Change this to the branch you want the job to run on
